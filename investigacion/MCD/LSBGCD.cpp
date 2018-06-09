@@ -1,12 +1,14 @@
+
 #include <iostream>
 #include <math.h>
 #include <stdio.h>
 #include <algorithm>
 using namespace std;
-
-int gcdu(int u,int v){
+int cont = 0;
+int LSBGCD(int u,int v){
 	int e, t;
 	while (v > 0){
+		cont++;
 		int i = 0, x = 2;
 		while (i < v){
 			if (pow(x, i)*v <= u){
@@ -24,13 +26,13 @@ int gcdu(int u,int v){
 			u = v; v = aux;
 		}
 	}
+	cout << cont << endl;
 	return u;
 }
 int main()
 {
 	int u = 47, v = 40;
-	cout<<gcdu(u, v);
+	cout<<LSBGCD(u, v);
 	system("pause");
 	return 0;
 }
-
