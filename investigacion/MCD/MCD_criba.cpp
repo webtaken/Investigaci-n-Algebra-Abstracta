@@ -1,46 +1,39 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
 #include <math.h>
-#include <fstream>
-#include <sstream>
-#include <cstring>
+#include <algorithm>
 using namespace std;
 
-const int SQRT_MAXN = 100000; // square root of maximum value of N
-const int S = 10000;
-bool nprime[SQRT_MAXN], bl[S];
-int primes[SQRT_MAXN], cnt;
+const int SQRT_MAXN = 10000000; // square root of maximum value of N
+bool nprime[SQRT_MAXN];
+
+int GCD_Criba(int a , int b){
+  int n = min(a , b);//solo recorreremos la criba hasta el mínimo de ambos números
+  int GCD = 1;//inicializamos el GCD en 1 
+  int nsqrt = (int) sqrt (n + .0);
+  //desde 2 hasta raiz cuadrada de n
+  for (int i=2; i<=nsqrt; ++i)
+    if (!nprime[i]) {//si i en esa posición todavía no ha sido marcado
+      if (i * 1ll * i <= n)
+	for (int j=i*i; j<=n; j+=i)
+	  nprime[j] = true;
+    }
+  //mietras ni a ni b sean 1
+  //tambien observamos todos las posiciones marcadas en la criba
+  for(int i = 2; i <= n && a ^ 1 && b ^ 1; i++){
+    while(!nprime[i] && a % i == 0 && b % i == 0)
+      a /= i , b /= i , GCD *= i; 
+  }
+  return GCD;//retornamos el valor inicial de GCD
+}
+
 
 int main() {
-
-    int n;
-    cin >> n;
-    int nsqrt = (int) sqrt (n + .0);
-    for (int i=2; i<=nsqrt; ++i)
-        if (!nprime[i]) {
-            primes[cnt++] = i;
-            if (i * 1ll * i <= nsqrt)
-                for (int j=i*i; j<=nsqrt; j+=i)
-                    nprime[j] = true;
-        }
-
-    int result = 0;
-    for (int k=0, maxk=n/S; k<=maxk; ++k) {
-        memset (bl, 0, sizeof bl);
-        int start = k * S;
-        for (int i=0; i<cnt; ++i) {
-            int start_idx = (start + primes[i] - 1) / primes[i];
-            int j = max(start_idx,2) * primes[i] - start;
-            for (; j<S; j+=primes[i])
-                bl[j] = true;
-        }
-        if (k == 0)
-            bl[0] = bl[1] = true;
-        for (int i=0; i<S && start+i<=n; ++i)
-            if (!bl[i])
-                ++result;
-    }
-    cout << result;
-
+  
+  int a , b;
+  cin >> a >> b;
+  cout << GCD_Criba(a , b) << endl;
+  
+  
+  return 0;
 }
+
